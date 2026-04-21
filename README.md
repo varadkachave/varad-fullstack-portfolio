@@ -134,6 +134,7 @@ If your database service has a different name, replace `MySQL` with that exact R
 2. Go to `Settings -> Networking`.
 3. Click `Generate Domain` to get a free Railway domain.
 4. If you own a custom domain, add it in the same section.
+5. https://varad-fullstack-portfolio-production.up.railway.app
 
 ### Notes
 
