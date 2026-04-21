@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="|${profile.fullName} - Portfolio|">Portfolio</title>
+    <meta name="description" content="Portfolio website built with Spring Boot, Thymeleaf, and MySQL.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/site.css}" href="/css/site.css">
+    <script defer th:src="@{/js/site.js}" src="/js/site.js"></script>
+</head>
+<body>
+<div class="ambient ambient-one"></div>
+<div class="ambient ambient-two"></div>
+
+<header class="site-header">
+    <a class="brand" href="#top">Varad</a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="siteNav">Menu</button>
+    <nav class="site-nav" id="siteNav" aria-label="Primary">
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#experience">Experience</a>
+        <a href="#education">Education</a>
+        <a href="#skills">Skills</a>
+        <a href="#contact">Contact</a>
+    </nav>
+</header>
+
+<main id="top">
+    <section class="hero section">
+        <div class="hero-copy" data-reveal>
+            <p class="eyebrow">Java full-stack portfolio</p>
+            <h1 th:text="${profile.fullName}">Varad M. Kachave</h1>
+            <p class="headline" th:text="${profile.headline}">MCA student and Java full-stack developer building practical web applications.</p>
+            <p class="hero-summary" th:text="${profile.heroSummary}">Motivated and detail-oriented, I enjoy turning strong Java fundamentals into real web products.</p>
+
+            <div class="hero-actions">
+                <a class="button button-primary" href="#contact">Get in touch</a>
+                <a class="button button-secondary" href="#projects">View projects</a>
+                <a class="button button-ghost" th:href="${profile.linkedinUrl}" target="_blank" rel="noreferrer">LinkedIn profile</a>
+            </div>
+
+            <div class="hero-tags">
+                <span th:text="|Based in ${profile.location}|">Based in Pune, Maharashtra</span>
+                <span th:text="${profile.availability}">Open to entry-level Java and full-stack development opportunities</span>
+            </div>
+        </div>
+
+        <aside class="hero-panel glass-card" data-reveal>
+            <p class="panel-label">Current focus</p>
+            <div class="panel-metric">
+                <strong>MCA</strong>
+                <span>building on a solid academic foundation in Java, web development, and database management</span>
+            </div>
+            <div class="panel-metric">
+                <strong>Spring Boot</strong>
+                <span>hands-on project work with REST APIs, MySQL, JDBC, JSP, and backend architecture concepts</span>
+            </div>
+            <div class="panel-metric">
+                <strong>Growth mindset</strong>
+                <span>actively looking for an entry-level role where strong fundamentals and reliability matter</span>
+            </div>
+        </aside>
+    </section>
+
+    <section class="stats-ribbon" data-reveal>
+        <div>
+            <strong th:text="|${profile.projectsDelivered}+|">2+</strong>
+            <span>Featured academic and practical software projects</span>
+        </div>
+        <div>
+            <strong th:text="|${#lists.size(experiences)}|">3</strong>
+            <span>Roles spanning internship, coordination, and field leadership</span>
+        </div>
+        <div>
+            <strong th:text="|${#lists.size(certifications)}|">5</strong>
+            <span>Certifications across networking, cybersecurity, AI, and SQL</span>
+        </div>
+    </section>
+
+    <section class="section split-layout" id="about">
+        <div class="section-intro" data-reveal>
+            <p class="eyebrow">About</p>
+            <h2>Clear fundamentals, practical project work, and a calm approach to solving problems.</h2>
+            <p th:text="${profile.aboutSummary}">I am an MCA student based in Pune with a strong foundation in Java, web development, and database management.</p>
+
+            <div class="social-row">
+                <a th:href="${profile.githubUrl}" target="_blank" rel="noreferrer">GitHub</a>
+                <a th:href="${profile.linkedinUrl}" target="_blank" rel="noreferrer">LinkedIn</a>
+                <a th:href="|mailto:${profile.email}|">Email</a>
+            </div>
+        </div>
+
+        <div class="service-stack" data-reveal>
+            <article class="service-card">
+                <p class="service-index">01</p>
+                <h3>Java and backend foundations</h3>
+                <p>Comfortable with Spring Boot, JDBC, Servlets, REST APIs, MVC, OOP, and relational data design using MySQL.</p>
+            </article>
+            <article class="service-card">
+                <p class="service-index">02</p>
+                <h3>Web development that ships</h3>
+                <p>Built complete flows using HTML, CSS, JavaScript, Bootstrap, JSP, and database-backed business logic.</p>
+            </article>
+            <article class="service-card">
+                <p class="service-index">03</p>
+                <h3>Leadership under pressure</h3>
+                <p>Placement coordination and trek leadership strengthened communication, planning, teamwork, and fast decision making.</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="section" id="projects">
+        <div class="section-heading" data-reveal>
+            <div>
+                <p class="eyebrow">Projects</p>
+                <h2>Work that demonstrates Java, database design, and full-stack thinking.</h2>
+            </div>
+            <p>These project cards are driven by Spring Boot entities so the portfolio content is dynamic, not hardcoded into the page.</p>
+        </div>
+
+        <div class="project-grid">
+            <article th:each="project : ${projects}" th:class="|project-card accent-${project.accent}|" data-reveal>
+                <p class="project-category" th:text="${project.category}">Spring Boot Backend Project</p>
+                <h3 th:text="${project.title}">Digital Credit Ledger System</h3>
+                <p class="project-summary" th:text="${project.summary}">Summary text</p>
+                <p class="project-result" th:text="${project.resultHighlight}">Result highlight</p>
+
+                <div class="stack-list">
+                    <span th:each="stack : ${#strings.arraySplit(project.techStack, ',')}" th:text="${#strings.trim(stack)}">Spring Boot</span>
+                </div>
+
+                <div class="project-links">
+                    <a th:if="${project.liveUrl != null && !project.liveUrl.isBlank()}" th:href="${project.liveUrl}" target="_blank" rel="noreferrer">Live preview</a>
+                    <a th:if="${project.repoUrl != null && !project.repoUrl.isBlank()}" th:href="${project.repoUrl}" target="_blank" rel="noreferrer">GitHub</a>
+                    <span class="info-note" th:if="${(project.liveUrl == null || project.liveUrl.isBlank()) && (project.repoUrl == null || project.repoUrl.isBlank())}">Demo available on request</span>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section class="section split-layout experience-layout" id="experience">
+        <div class="section-intro" data-reveal>
+            <p class="eyebrow">Experience</p>
+            <h2>Hands-on learning across internship work, coordination, and real-world responsibility.</h2>
+            <p>Each role strengthened a different part of the skill set: technical implementation, communication, ownership, and decision making.</p>
+        </div>
+
+        <div class="timeline">
+            <article class="timeline-item" th:each="experience : ${experiences}" data-reveal>
+                <div class="timeline-topline">
+                    <div>
+                        <h3 th:text="${experience.roleTitle}">Java Full Stack Web Development Intern</h3>
+                        <p th:text="${experience.company}">Main Flow Services and Technologies Pvt. Ltd.</p>
+                    </div>
+                    <span th:text="${experience.period}">Apr 2026</span>
+                </div>
+                <p class="timeline-location" th:text="${experience.location}">Pune</p>
+                <p th:text="${experience.summary}">Role summary</p>
+                <p class="timeline-highlights" th:text="${experience.highlights}">Highlights</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="section" id="education">
+        <div class="section-heading" data-reveal>
+            <div>
+                <p class="eyebrow">Education</p>
+                <h2>Academic track focused on computer applications and software development.</h2>
+            </div>
+            <p>Education matters here because the portfolio reflects an early-career developer building strong foundations and practical project depth.</p>
+        </div>
+
+        <div class="education-grid">
+            <article class="education-card" th:each="education : ${educationHistory}" data-reveal>
+                <div class="timeline-topline">
+                    <div>
+                        <h3 th:text="${education.degree}">Master of Computer Applications</h3>
+                        <p th:text="${education.institution}">Indira College of Engineering and Management</p>
+                    </div>
+                    <span th:text="${education.period}">Expected Aug 2026</span>
+                </div>
+                <p class="timeline-location" th:text="${education.location}">Pune</p>
+                <p th:text="${education.notes}">Focused on Java, web development, and database-oriented software engineering.</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="section" id="skills">
+        <div class="section-heading" data-reveal>
+            <div>
+                <p class="eyebrow">Skills and Certifications</p>
+                <h2>The technologies and credentials behind the work.</h2>
+            </div>
+            <p>Grouped skills reflect the stack in the resume, and certifications add extra proof of curiosity and structured learning.</p>
+        </div>
+
+        <div class="skills-grid">
+            <article class="skill-card" th:each="skillGroup : ${skillsByCategory}" data-reveal>
+                <div class="skill-card-header">
+                    <h3 th:text="${skillGroup.key}">Backend</h3>
+                    <span th:text="|${#lists.size(skillGroup.value)} skills|">4 skills</span>
+                </div>
+                <div class="skill-list">
+                    <div class="skill-pill" th:each="skill : ${skillGroup.value}">
+                        <strong th:text="${skill.name}">Spring Boot</strong>
+                        <small th:text="${skill.level}">Advanced</small>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <div class="certifications-wrap" data-reveal>
+            <span class="cert-pill" th:each="certification : ${certifications}" th:text="${certification.title}">Cisco Certified Network Associate (CCNA)</span>
+        </div>
+    </section>
+
+    <section class="section contact-layout" id="contact">
+        <div class="contact-copy" data-reveal>
+            <p class="eyebrow">Contact</p>
+            <h2>Reach out for opportunities, collaboration, or interviews.</h2>
+            <p>This contact form stores submissions in MySQL, so the portfolio works like a real lead inbox instead of a static page.</p>
+
+            <div class="contact-card glass-card">
+                <div>
+                    <span>Email</span>
+                    <a th:href="|mailto:${profile.email}|" th:text="${profile.email}">varadkachave203@gmail.com</a>
+                </div>
+                <div>
+                    <span>Phone</span>
+                    <a th:href="|tel:${profile.phone}|" th:text="${profile.phone}">8530290301</a>
+                </div>
+                <div>
+                    <span>Availability</span>
+                    <p th:text="${profile.availability}">Open to entry-level Java and full-stack development opportunities</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="contact-form-card" data-reveal>
+            <div class="success-banner" th:if="${messageSent}">
+                Your message was saved successfully. Check the `contact_messages` table in MySQL to see it.
+            </div>
+
+            <form th:action="@{/contact}" th:object="${contactForm}" method="post" novalidate>
+                <label>
+                    Name
+                    <input type="text" th:field="*{name}" placeholder="Your full name" autocomplete="name">
+                    <span class="field-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name error</span>
+                </label>
+
+                <label>
+                    Email
+                    <input type="email" th:field="*{email}" placeholder="you@example.com" autocomplete="email">
+                    <span class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</span>
+                </label>
+
+                <label>
+                    Company or organization
+                    <input type="text" th:field="*{company}" placeholder="Company, college, or brand name">
+                    <span class="field-error" th:if="${#fields.hasErrors('company')}" th:errors="*{company}">Company error</span>
+                </label>
+
+                <label>
+                    Opportunity type
+                    <select th:field="*{budget}">
+                        <option value="">Select an option</option>
+                        <option value="Full-time role">Full-time role</option>
+                        <option value="Internship">Internship</option>
+                        <option value="Freelance project">Freelance project</option>
+                        <option value="Collaboration">Collaboration</option>
+                    </select>
+                    <span class="field-error" th:if="${#fields.hasErrors('budget')}" th:errors="*{budget}">Opportunity error</span>
+                </label>
+
+                <label class="full-width">
+                    Message
+                    <textarea th:field="*{message}" rows="6" placeholder="Share the role, collaboration idea, or project details."></textarea>
+                    <span class="field-error" th:if="${#fields.hasErrors('message')}" th:errors="*{message}">Message error</span>
+                </label>
+
+                <button class="button button-primary submit-button" type="submit">Send message</button>
+            </form>
+        </div>
+    </section>
+</main>
+
+<footer class="site-footer">
+    <p th:text="|${profile.fullName} - Portfolio|">Varad M. Kachave - Portfolio</p>
+    <p th:text="|${currentYear} - Built with Spring Boot and MySQL.|">2026 - Built with Spring Boot and MySQL.</p>
+</footer>
+</body>
+</html>

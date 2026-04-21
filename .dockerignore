@@ -1,0 +1,12 @@
+target
+.m2
+.mvn-settings.xml
+.env
+.env.local
+tmp_resume_images
+tmp_resume_pages
+.git
+.idea
+.vscode
+node_modules
+README.md

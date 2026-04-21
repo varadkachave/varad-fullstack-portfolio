@@ -1,0 +1,10 @@
+/target/
+/.m2/
+/.mvn-settings.xml
+/tmp_resume_images/
+tmp_resume_pages/
+/.idea/
+/.vscode/
+/.DS_Store
+*.log
+*.env

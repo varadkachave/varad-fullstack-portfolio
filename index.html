@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Poultry Farm Command Center</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-glow page-glow-left"></div>
+    <div class="page-glow page-glow-right"></div>
+
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand-block">
+          <p class="eyebrow">Farm OS</p>
+          <h1>Poultry Pilot</h1>
+          <p class="brand-copy">
+            Multi-shed poultry management for birds, health, feed, tasks, stock, and money.
+          </p>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Primary">
+          <button class="nav-link is-active" data-target="overview" type="button">Overview</button>
+          <button class="nav-link" data-target="sheds" type="button">Sheds</button>
+          <button class="nav-link" data-target="health" type="button">Health</button>
+          <button class="nav-link" data-target="operations" type="button">Operations</button>
+          <button class="nav-link" data-target="inventory" type="button">Inventory</button>
+          <button class="nav-link" data-target="tasks" type="button">Tasks</button>
+          <button class="nav-link" data-target="finance" type="button">Finance & Reports</button>
+        </nav>
+
+        <article class="sidebar-tip">
+          <p class="eyebrow">Daily focus</p>
+          <h2 id="dailyFocusTitle">Watch the priority shed</h2>
+          <p id="dailyFocusText">Alerts, vaccine windows, and low stock warnings will appear here.</p>
+        </article>
+      </aside>
+
+      <main class="workspace">
+        <header class="hero">
+          <div class="hero-copy">
+            <p class="eyebrow">Poultry management dashboard</p>
+            <h2 id="farmNameHeading">Poultry Farm Command Center</h2>
+            <p id="farmMeta">Owner details, bird strength, and shed coverage load here.</p>
+          </div>
+
+          <div class="hero-actions">
+            <button class="button secondary" id="exportDataBtn" type="button">Export Data</button>
+            <label class="button secondary file-trigger" for="importDataInput">Import Data</label>
+            <input id="importDataInput" type="file" accept=".json" hidden />
+            <button class="button secondary danger-outline" id="resetDataBtn" type="button">Reset Demo</button>
+          </div>
+        </header>
+
+        <section class="content-section is-active" id="section-overview">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Overview</p>
+              <h3>Farm command center</h3>
+              <p>One screen for sheds, birds, health schedules, production, and urgent actions.</p>
+            </div>
+            <div class="status-chip" id="lastSavedLabel">Last saved recently</div>
+          </div>
+
+          <div class="stats-grid">
+            <article class="stat-card">
+              <span>Total sheds</span>
+              <strong id="statSheds">0</strong>
+              <p id="statCapacityText">Capacity and distribution appear here.</p>
+            </article>
+            <article class="stat-card">
+              <span>Total live birds</span>
+              <strong id="statBirds">0</strong>
+              <p id="statBirdMixText">Bird balance across active sheds.</p>
+            </article>
+            <article class="stat-card">
+              <span>Farm occupancy</span>
+              <strong id="statOccupancy">0%</strong>
+              <p id="statOccupancyText">How full the sheds are right now.</p>
+            </article>
+            <article class="stat-card">
+              <span>7-day mortality</span>
+              <strong id="statMortality">0%</strong>
+              <p id="statMortalityText">Based on recent operational entries.</p>
+            </article>
+            <article class="stat-card">
+              <span>Due vaccines</span>
+              <strong id="statVaccines">0</strong>
+              <p id="statVaccinesText">Upcoming and overdue health windows.</p>
+            </article>
+            <article class="stat-card">
+              <span>Monthly net</span>
+              <strong id="statNet">₹0</strong>
+              <p id="statFinanceText">Income minus expenses for this month.</p>
+            </article>
+          </div>
+
+          <div class="overview-grid">
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <h4>Critical alerts</h4>
+                  <p>Vaccines, stock shortages, unusual mortality, overloaded sheds, and overdue work.</p>
+                </div>
+              </div>
+              <ul class="alert-list" id="alertList"></ul>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <h4>Upcoming vaccinations</h4>
+                  <p>Plan dose timing before birds miss the right health window.</p>
+                </div>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Shed</th>
+                      <th>Disease</th>
+                      <th>Vaccine</th>
+                      <th>Due</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="upcomingVaccinationsBody"></tbody>
+                </table>
+              </div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <h4>Shed performance snapshot</h4>
+                  <p>Use this to compare occupancy, mortality, and output shed by shed.</p>
+                </div>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Shed</th>
+                      <th>Birds</th>
+                      <th>Occupancy</th>
+                      <th>Latest mortality</th>
+                      <th>Latest output</th>
+                    </tr>
+                  </thead>
+                  <tbody id="shedSnapshotBody"></tbody>
+                </table>
+              </div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <h4>Recent farm activity</h4>
+                  <p>Fresh movement from operations, vaccination work, tasks, and finance.</p>
+                </div>
+              </div>
+              <div class="activity-feed" id="activityFeed"></div>
+            </article>
+          </div>
+
+          <div class="profile-grid">
+            <article class="panel accent-panel">
+              <div class="panel-head">
+                <div>
+                  <h4>Farm profile</h4>
+                  <p>Update the owner, location, and operating note that appears across the app.</p>
+                </div>
+              </div>
+              <form class="form-grid compact-form" id="farmProfileForm">
+                <label>
+                  Farm name
+                  <input id="farmNameInput" name="farmName" type="text" required />
+                </label>
+                <label>
+                  Owner name
+                  <input id="ownerNameInput" name="ownerName" type="text" required />
+                </label>
+                <label>
+                  Location
+                  <input id="locationInput" name="location" type="text" required />
+                </label>
+                <label>
+                  Contact
+                  <input id="contactInput" name="contact" type="text" required />
+                </label>
+                <label class="full-span">
+                  Farm note
+                  <textarea id="farmNotesInput" name="notes" rows="3"></textarea>
+                </label>
+                <div class="form-actions full-span">
+                  <button class="button" type="submit">Save Farm Profile</button>
+                </div>
+              </form>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <h4>Decision support</h4>
+                  <p>Fast readings to help the owner choose what to inspect first today.</p>
+                </div>
+              </div>
+              <div class="insight-grid" id="insightCards"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="content-section" id="section-sheds">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Shed management</p>
+              <h3>Bird housing and shed setup</h3>
+              <p>Add sheds, monitor bird strength, check supervisors, and track environment targets.</p>
+            </div>
+          </div>
+
+          <div class="shed-grid" id="shedCards"></div>
+
+          <article class="panel form-panel">
+            <div class="panel-head">
+              <div>
+                <h4>Add a new shed</h4>
+                <p>Use this form when you start a fresh shed or expand the farm with more capacity.</p>
+              </div>
+            </div>
+            <form class="form-grid" id="shedForm">
+              <label>
+                Shed name
+                <input name="name" type="text" placeholder="Shed 5" required />
+              </label>
+              <label>
+                Shed type
+                <select name="type" required>
+                  <option value="Broiler">Broiler</option>
+                  <option value="Layer">Layer</option>
+                  <option value="Breeder">Breeder</option>
+                </select>
+              </label>
+              <label>
+                Capacity
+                <input name="capacity" type="number" min="1" step="1" required />
+              </label>
+              <label>
+                Current birds
+                <input name="currentBirds" type="number" min="0" step="1" required />
+              </label>
+              <label>
+                Age in days
+                <input name="ageDays" type="number" min="0" step="1" required />
+              </label>
+              <label>
+                Breed
+                <input name="breed" type="text" placeholder="Cobb 500" required />
+              </label>
+              <label>
+                Batch code
+                <input name="batchCode" type="text" placeholder="B-APR-S5" required />
+              </label>
+              <label>
+                Supervisor
+                <input name="supervisor" type="text" placeholder="Staff in charge" required />
+              </label>
+              <label>
+                Placement date
+                <input name="placementDate" type="date" required />
+              </label>
+              <label>
+                Target temp (°C)
+                <input name="targetTemp" type="number" min="0" step="0.1" required />
+              </label>
+              <label>
+                Target humidity (%)
+                <input name="targetHumidity" type="number" min="0" step="1" required />
+              </label>
+              <label class="full-span">
+                Shed notes
+                <textarea name="notes" rows="3" placeholder="Record ventilation, litter, bird behavior, or water-line notes."></textarea>
+              </label>
+              <div class="form-actions full-span">
+                <button class="button" type="submit">Add Shed</button>
+              </div>
+            </form>
+          </article>
+        </section>
+
+        <section class="content-section" id="section-health">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Health and vaccination</p>
+              <h3>Vaccination planner and history</h3>
+              <p>Track disease prevention by shed, dose method, due date, and completion details.</p>
+            </div>
+          </div>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <h4>Vaccination schedule</h4>
+                <p>This table highlights what is completed, what is due soon, and what is already late.</p>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Shed</th>
+                    <th>Disease</th>
+                    <th>Vaccine</th>
+                    <th>Method</th>
+                    <th>Dose</th>
+                    <th>Due date</th>
+                    <th>Completed</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="vaccinationTableBody"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel form-panel">
+            <div class="panel-head">
+              <div>
+                <h4>Add vaccination entry</h4>
+                <p>Use scheduled date for reminders, and fill completed date once the dose is done.</p>
+              </div>
+            </div>
+            <form class="form-grid" id="vaccinationForm">
+              <label>
+                Shed
+                <select id="vaccShedId" name="shedId" required></select>
+              </label>
+              <label>
+                Disease
+                <input name="disease" type="text" placeholder="Newcastle Disease" required />
+              </label>
+              <label>
+                Vaccine name
+                <input name="vaccineName" type="text" placeholder="Lasota" required />
+              </label>
+              <label>
+                Method
+                <select name="method" required>
+                  <option value="Drinking water">Drinking water</option>
+                  <option value="Eye drop">Eye drop</option>
+                  <option value="Injection">Injection</option>
+                  <option value="Spray">Spray</option>
+                </select>
+              </label>
+              <label>
+                Dose
+                <input name="dose" type="text" placeholder="1 vial / 1000 birds" required />
+              </label>
+              <label>
+                Batch number
+                <input name="batchNo" type="text" placeholder="VAC-2026-001" required />
+              </label>
+              <label>
+                Due date
+                <input id="vaccDueDate" name="dueDate" type="date" required />
+              </label>
+              <label>
+                Completed date
+                <input name="completedDate" type="date" />
+              </label>
+              <label>
+                Technician
+                <input name="technician" type="text" placeholder="Doctor or supervisor" required />
+              </label>
+              <label class="full-span">
+                Notes
+                <textarea name="notes" rows="3" placeholder="Mention reactions, water withdrawal timing, or follow-up steps."></textarea>
+              </label>
+              <div class="form-actions full-span">
+                <button class="button" type="submit">Save Vaccination</button>
+              </div>
+            </form>
+          </article>
+        </section>
+
+        <section class="content-section" id="section-operations">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Daily operations</p>
+              <h3>Feed, water, eggs, mortality, and climate</h3>
+              <p>Record the daily running condition of each shed and keep the live-bird count updated.</p>
+            </div>
+          </div>
+
+          <div class="ops-pulse-grid" id="opsPulse"></div>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <h4>Daily logs</h4>
+                <p>Every row is a shed-level operational entry with bird movement, feed, and environmental data.</p>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Shed</th>
+                    <th>Birds</th>
+                    <th>Mortality</th>
+                    <th>Feed (kg)</th>
+                    <th>Water (L)</th>
+                    <th>Eggs</th>
+                    <th>Avg wt. (kg)</th>
+                    <th>Climate</th>
+                    <th>Notes</th>
+                  </tr>
+                </thead>
+                <tbody id="dailyLogTableBody"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel form-panel">
+            <div class="panel-head">
+              <div>
+                <h4>Add daily shed log</h4>
+                <p>The closing bird count is calculated from opening birds minus mortality and culls.</p>
+              </div>
+            </div>
+            <form class="form-grid" id="dailyLogForm">
+              <label>
+                Log date
+                <input id="logDateInput" name="date" type="date" required />
+              </label>
+              <label>
+                Shed
+                <select id="logShedId" name="shedId" required></select>
+              </label>
+              <label>
+                Opening birds
+                <input id="logOpeningBirds" name="openingBirds" type="number" min="0" step="1" required />
+              </label>
+              <label>
+                Mortality
+                <input name="mortality" type="number" min="0" step="1" value="0" required />
+              </label>
+              <label>
+                Culls
+                <input name="culls" type="number" min="0" step="1" value="0" required />
+              </label>
+              <label>
+                Feed used (kg)
+                <input name="feedKg" type="number" min="0" step="0.1" required />
+              </label>
+              <label>
+                Water used (L)
+                <input name="waterLiters" type="number" min="0" step="1" required />
+              </label>
+              <label>
+                Eggs collected
+                <input name="eggsCollected" type="number" min="0" step="1" value="0" required />
+              </label>
+              <label>
+                Avg weight (kg)
+                <input name="avgWeight" type="number" min="0" step="0.01" required />
+              </label>
+              <label>
+                Temperature (°C)
+                <input name="temperature" type="number" min="0" step="0.1" required />
+              </label>
+              <label>
+                Humidity (%)
+                <input name="humidity" type="number" min="0" step="1" required />
+              </label>
+              <label>
+                Medicine note
+                <input name="medicine" type="text" placeholder="Vitamin boost / antibiotic / none" />
+              </label>
+              <label class="full-span">
+                Observations
+                <textarea name="notes" rows="3" placeholder="Write behavior changes, feed refusal, wet litter, or fan issues."></textarea>
+              </label>
+              <div class="form-actions full-span">
+                <button class="button" type="submit">Save Daily Log</button>
+              </div>
+            </form>
+          </article>
+        </section>
+
+        <section class="content-section" id="section-inventory">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Inventory and supplies</p>
+              <h3>Feed, vaccine, medicine, and shed supplies</h3>
+              <p>Monitor stock on hand, reorder levels, supplier links, and expiry dates.</p>
+            </div>
+          </div>
+
+          <div class="inventory-alert-grid" id="inventoryAlerts"></div>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <h4>Stock register</h4>
+                <p>Low stock lines float to the top so shortages are visible before they stop operations.</p>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>Category</th>
+                    <th>On hand</th>
+                    <th>Reorder</th>
+                    <th>Supplier</th>
+                    <th>Expiry</th>
+                    <th>Unit cost</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="inventoryTableBody"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel form-panel">
+            <div class="panel-head">
+              <div>
+                <h4>Add inventory item</h4>
+                <p>Record feed, vaccines, cleaning chemicals, diesel, or any other farm supply.</p>
+              </div>
+            </div>
+            <form class="form-grid" id="inventoryForm">
+              <label>
+                Item name
+                <input name="name" type="text" placeholder="Layer mash" required />
+              </label>
+              <label>
+                Category
+                <select name="category" required>
+                  <option value="Feed">Feed</option>
+                  <option value="Vaccine">Vaccine</option>
+                  <option value="Medicine">Medicine</option>
+                  <option value="Supplement">Supplement</option>
+                  <option value="Disinfectant">Disinfectant</option>
+                  <option value="Fuel">Fuel</option>
+                  <option value="Litter">Litter</option>
+                  <option value="Equipment">Equipment</option>
+                </select>
+              </label>
+              <label>
+                Quantity on hand
+                <input name="quantity" type="number" min="0" step="0.1" required />
+              </label>
+              <label>
+                Unit
+                <input name="unit" type="text" placeholder="kg / vials / liters" required />
+              </label>
+              <label>
+                Reorder level
+                <input name="reorderLevel" type="number" min="0" step="0.1" required />
+              </label>
+              <label>
+                Supplier
+                <input name="supplier" type="text" placeholder="Supplier or dealer" required />
+              </label>
+              <label>
+                Expiry date
+                <input name="expiryDate" type="date" />
+              </label>
+              <label>
+                Unit cost (₹)
+                <input name="unitCost" type="number" min="0" step="0.01" required />
+              </label>
+              <div class="form-actions full-span">
+                <button class="button" type="submit">Add Stock Item</button>
+              </div>
+            </form>
+          </article>
+        </section>
+
+        <section class="content-section" id="section-tasks">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Tasks and biosecurity</p>
+              <h3>Daily action board</h3>
+              <p>Assign cleaning, inspection, vaccination prep, maintenance, and follow-up work by due date.</p>
+            </div>
+          </div>
+
+          <div class="task-summary-grid" id="taskSummary"></div>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <h4>Open task board</h4>
+                <p>Mark jobs complete when the work is done so the owner always sees the real farm load.</p>
+              </div>
+            </div>
+            <div class="task-board" id="taskBoard"></div>
+          </article>
+
+          <article class="panel form-panel">
+            <div class="panel-head">
+              <div>
+                <h4>Add task</h4>
+                <p>Good for biosecurity rounds, repairs, vaccination prep, weight sampling, and stock follow-up.</p>
+              </div>
+            </div>
+            <form class="form-grid" id="taskForm">
+              <label>
+                Task title
+                <input name="title" type="text" placeholder="Water line sanitation" required />
+              </label>
+              <label>
+                Shed
+                <select id="taskShedId" name="shedId"></select>
+              </label>
+              <label>
+                Category
+                <select name="category" required>
+                  <option value="Biosecurity">Biosecurity</option>
+                  <option value="Cleaning">Cleaning</option>
+                  <option value="Maintenance">Maintenance</option>
+                  <option value="Inspection">Inspection</option>
+                  <option value="Vaccination">Vaccination</option>
+                  <option value="Staff">Staff</option>
+                </select>
+              </label>
+              <label>
+                Due date
+                <input id="taskDueDate" name="dueDate" type="date" required />
+              </label>
+              <label>
+                Priority
+                <select name="priority" required>
+                  <option value="High">High</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Low">Low</option>
+                </select>
+              </label>
+              <label>
+                Assigned to
+                <input name="assignedTo" type="text" placeholder="Supervisor or worker" required />
+              </label>
+              <label class="full-span">
+                Notes
+                <textarea name="notes" rows="3" placeholder="Write the exact work to be done and any special instructions."></textarea>
+              </label>
+              <div class="form-actions full-span">
+                <button class="button" type="submit">Add Task</button>
+              </div>
+            </form>
+          </article>
+        </section>
+
+        <section class="content-section" id="section-finance">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Finance and reports</p>
+              <h3>Cash movement and shed intelligence</h3>
+              <p>Track income, spending, monthly net results, and a report card for every shed.</p>
+            </div>
+          </div>
+
+          <div class="finance-summary-grid" id="financeSummary"></div>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <h4>Transactions</h4>
+                <p>Separate farm income and expenses so the owner can see where the money is going.</p>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Category</th>
+                    <th>Shed</th>
+                    <th>Counterparty</th>
+                    <th>Amount</th>
+                    <th>Notes</th>
+                  </tr>
+                </thead>
+                <tbody id="financeTableBody"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel form-panel">
+            <div class="panel-head">
+              <div>
+                <h4>Add transaction</h4>
+                <p>Use income for sales and expense for feed, labor, medicine, electricity, or transport.</p>
+              </div>
+            </div>
+            <form class="form-grid" id="financeForm">
+              <label>
+                Type
+                <select name="type" required>
+                  <option value="Income">Income</option>
+                  <option value="Expense">Expense</option>
+                </select>
+              </label>
+              <label>
+                Date
+                <input id="financeDate" name="date" type="date" required />
+              </label>
+              <label>
+                Category
+                <input name="category" type="text" placeholder="Feed purchase / Egg sale" required />
+              </label>
+              <label>
+                Shed
+                <select id="financeShedId" name="shedId"></select>
+              </label>
+              <label>
+                Counterparty
+                <input name="counterparty" type="text" placeholder="Vendor / buyer / transporter" required />
+              </label>
+              <label>
+                Amount (₹)
+                <input name="amount" type="number" min="0" step="0.01" required />
+              </label>
+              <label class="full-span">
+                Notes
+                <textarea name="notes" rows="3" placeholder="Mention payment mode, bill details, or sale remarks."></textarea>
+              </label>
+              <div class="form-actions full-span">
+                <button class="button" type="submit">Add Transaction</button>
+              </div>
+            </form>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <h4>Shed report cards</h4>
+                <p>Operational signals per shed to help the owner decide where to visit first.</p>
+              </div>
+            </div>
+            <div class="report-card-grid" id="reportCards"></div>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="./js/app.js"></script>
+  </body>
+</html>
